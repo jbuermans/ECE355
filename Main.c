@@ -68,12 +68,12 @@ void myDAC_Init(void);
 
 
 // Your global variables...
-volatile unsigned int count=0;			//counter for frequency calculations
-volatile double period1=0;				//Period place holder
-volatile int frequency1=0;				//Frequency place holder
-volatile int edge= 0;					//Flag for interrupt cycles
-volatile int res = 0;					//Resistance place holer
-volatile int ADC_Value;					//ADC1 value
+volatile unsigned int count=0;		//counter for frequency calculations
+volatile double period1=0;		//Period place holder
+volatile int frequency1=0;		//Frequency place holder
+volatile int edge= 0;			//Flag for interrupt cycles
+volatile int res = 0;			//Resistance place holer
+volatile int ADC_Value;			//ADC1 value
 volatile int data = ((uint8_t)0x46);	//8bit data to be pushed to SPI/LCD
 
 
@@ -99,9 +99,9 @@ main(int argc, char* argv[])
 	while (1)
 	{
 		while((ADC1->ISR & ADC_ISR_EOC) != ADC_ISR_EOC);		//Waits until end of conversion
-		ADC_Value = (ADC1 -> DR);								//Grabs ADC1 register value
-		DAC->DHR12R1 = ADC_Value;								//Pushes ADC1 value into DAC register to be sent
-		res = 5000*ADC_Value/4095;								//Converting ADC value to Resistance
+		ADC_Value = (ADC1 -> DR);					//Grabs ADC1 register value
+		DAC->DHR12R1 = ADC_Value;					//Pushes ADC1 value into DAC register to be sent
+		res = 5000*ADC_Value/4095;					//Converting ADC value to Resistance
 	}
 	return 0;
 }
@@ -115,7 +115,7 @@ void myGPIOA_Init()
 
 	/* Configure PA1 as input */
 	// Relevant register: GPIOA->MODER
-	GPIOA->MODER &= ~(GPIO_MODER_MODER1);						//Sets GPIOA port 1 to input
+	GPIOA->MODER &= ~(GPIO_MODER_MODER1);				//Sets GPIOA port 1 to input
 	GPIOA->MODER |= (GPIO_MODER_MODER6 |GPIO_MODER_MODER4);		//Sets GPIOA ports 4 and 6 to analog mode
 
 	/* Ensure no pull-up/pull-down for PA1 */
@@ -127,13 +127,13 @@ void myGPIOA_Init()
 	/* Initializes GPIOB */
 void myGPIOB_Init()
 {
-	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;							//Enables timer for GPIOB
+	RCC->AHBENR |= RCC_AHBENR_GPIOBEN;				//Enables timer for GPIOB
 	GPIOB->MODER |= GPIO_MODER_MODER3_1 | GPIO_MODER_MODER5_1;	//Sets GPIOB ports 3 and 5 as outputs
-	GPIOB->MODER |= GPIO_MODER_MODER4_0;						//Sets GPIOB port 4 to output.
+	GPIOB->MODER |= GPIO_MODER_MODER4_0;				//Sets GPIOB port 4 to output.
 	GPIOB->PUPDR &= ~(GPIO_PUPDR_PUPDR3 | GPIO_PUPDR_PUPDR5);	//Disables pull up/pull down
-	GPIOB->PUPDR &= ~(GPIO_PUPDR_PUPDR4);  						//Disables pull up/pull down
-	GPIOB->OTYPER &= ~(GPIO_OTYPER_OT_4);						//push-pull mode for portB pin4
-	GPIOB->OSPEEDR |= (GPIO_OSPEEDER_OSPEEDR4);					//high-speed mode for PB4
+	GPIOB->PUPDR &= ~(GPIO_PUPDR_PUPDR4);  				//Disables pull up/pull down
+	GPIOB->OTYPER &= ~(GPIO_OTYPER_OT_4);				//push-pull mode for portB pin4
+	GPIOB->OSPEEDR |= (GPIO_OSPEEDER_OSPEEDR4);			//high-speed mode for PB4
 }
 
 	/* nitializes timer */
@@ -201,20 +201,20 @@ void mySPI_Init(){
 
 	SPI_InitTypeDef SPI_InitStructInfo;
 	SPI_InitTypeDef* SPI_InitStruct = &SPI_InitStructInfo;
-	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;										//Enables SPI Clock
+	RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;						//Enables SPI Clock
 
-	SPI_InitStruct->SPI_BaudRatePrescaler 	= SPI_BaudRatePrescaler_256;		//Verified in lab manual BaudRate
-	SPI_InitStruct->SPI_CPOL 				= SPI_CPOL_Low;					//Clock Polarity
-	SPI_InitStruct->SPI_CPHA 				= SPI_CPHA_1Edge;				//Clock Phase
-	SPI_InitStruct->SPI_FirstBit 			= SPI_FirstBit_MSB;				//First bit read is most significant bit
-	SPI_InitStruct->SPI_CRCPolynomial 		= 7;							//Selects the polynomial used for CRC calculation
-	SPI_InitStruct->SPI_Mode 				= SPI_Mode_Master;				//Mode set to Master
-	SPI_InitStruct->SPI_Direction 			= SPI_Direction_1Line_Tx;		//Single directional flow
-	SPI_InitStruct->SPI_DataSize 			= SPI_DataSize_8b;				//Made this 8 bits
-	SPI_InitStruct->SPI_NSS					= SPI_NSS_Soft;					//Slave select management
+	SPI_InitStruct->SPI_BaudRatePrescaler 		= SPI_BaudRatePrescaler_256;	//Verified in lab manual BaudRate
+	SPI_InitStruct->SPI_CPOL 			= SPI_CPOL_Low;			//Clock Polarity
+	SPI_InitStruct->SPI_CPHA 			= SPI_CPHA_1Edge;		//Clock Phase
+	SPI_InitStruct->SPI_FirstBit 			= SPI_FirstBit_MSB;		//First bit read is most significant bit
+	SPI_InitStruct->SPI_CRCPolynomial 		= 7;				//Selects the polynomial used for CRC calculation
+	SPI_InitStruct->SPI_Mode 			= SPI_Mode_Master;		//Mode set to Master
+	SPI_InitStruct->SPI_Direction 			= SPI_Direction_1Line_Tx;	//Single directional flow
+	SPI_InitStruct->SPI_DataSize 			= SPI_DataSize_8b;		//Made this 8 bits
+	SPI_InitStruct->SPI_NSS				= SPI_NSS_Soft;			//Slave select management
 
-	SPI_Init(SPI1, SPI_InitStruct);											//Final Configuration of SPI
-	SPI_Cmd(SPI1, ENABLE);													//Enbles SPI
+	SPI_Init(SPI1, SPI_InitStruct);							//Final Configuration of SPI
+	SPI_Cmd(SPI1, ENABLE);								//Enbles SPI
 	notWait(4);																//Waits
 	myLCD_init();															//Starts myLCD_init()
 
@@ -309,9 +309,9 @@ void send_data(uint8_t sendData){
 void myADC_Init(){
 	RCC->APB2ENR |= RCC_APB2ENR_ADCEN; 				//Enables ADC Clock
 
-	ADC1->CR &= ~(ADC_CR_ADEN);						//turn off
-	ADC1->CR |= ADC_CR_ADCAL;						//Calibrate
-	while((ADC1->CR & ADC_CR_ADCAL) != 0);			//wait
+	ADC1->CR &= ~(ADC_CR_ADEN);					//turn off
+	ADC1->CR |= ADC_CR_ADCAL;					//Calibrate
+	while((ADC1->CR & ADC_CR_ADCAL) != 0);				//wait
 
 	ADC1->CFGR1 |= (ADC_CFGR1_CONT);				//Enables Continuous mode for ADC
 	ADC1->CFGR1 |= ADC_CFGR1_OVRMOD;				//Enables overrun mode
@@ -323,14 +323,14 @@ void myADC_Init(){
 	ADC1->SMPR  |= ADC_SMPR_SMP;					//Sampling time set to 239.5 ADC clock cycles
 
 	ADC1->CR |= (ADC_CR_ADEN);  					//Enables ADC
-	while(((ADC1 ->ISR) & (ADC_ISR_ADRDY)) != 1);	//Waits until ADC is read to start conversion
+	while(((ADC1 ->ISR) & (ADC_ISR_ADRDY)) != 1);			//Waits until ADC is read to start conversion
 }
 
 	/* Configures DAC to output read ADC */
 void myDAC_Init(){
 
 	RCC->APB1ENR |= RCC_APB1ENR_DACEN;		//Enables DAC Clock
-	DAC->CR |= DAC_CR_EN1;					//Powers channel one
+	DAC->CR |= DAC_CR_EN1;				//Powers channel one
 }
 
 	/* This handler is declared in system/src/cmsis/vectors_stm32f0xx.c */
@@ -358,25 +358,25 @@ void EXTI0_1_IRQHandler()
 	/* Check if EXTI1 interrupt pending flag is indeed set */
 	if ((EXTI->PR & EXTI_PR_PR1) != 0)
 	{
-		if(edge == 1){							//If interrupt happened only once reset timer and start counting
-			edge = 0;							//First interrupt flag
+		if(edge == 1){						//If interrupt happened only once reset timer and start counting
+			edge = 0;					//First interrupt flag
 			TIM2->CNT = 0x00000000;				//Set count value to 0
-			TIM2->CR1 |= 0x1;					//Start counter
-			EXTI->PR = 0x02;					//Reset interrupt
+			TIM2->CR1 |= 0x1;				//Start counter
+			EXTI->PR = 0x02;				//Reset interrupt
 		}
 		else{
 
 			TIM2->CR1 &= 0x0000;				//On second interrupt
-			count = TIM2->CNT;					//Grab Counter value for equations
-			EXTI->IMR &= ~((uint32_t)0x0002);	//Mask
-			period1 = ((double)count)/48000000;	//Calculate the period
-			frequency1 = 48000000/(count);		//Calculate the frequency
+			count = TIM2->CNT;				//Grab Counter value for equations
+			EXTI->IMR &= ~((uint32_t)0x0002);		//Mask
+			period1 = ((double)count)/48000000;		//Calculate the period
+			frequency1 = 48000000/(count);			//Calculate the frequency
 
 			print_line(0, frequency1);			//Prush frequency to top line
-			print_line(1, res);					//Push Resistance to bottom line
-			edge = 1;							//Reset flag
-			EXTI->IMR |= ((uint32_t)0x0002);	//Unmask
-			EXTI->PR = 0x02;					//Reset interrupt
+			print_line(1, res);				//Push Resistance to bottom line
+			edge = 1;					//Reset flag
+			EXTI->IMR |= ((uint32_t)0x0002);		//Unmask
+			EXTI->PR = 0x02;				//Reset interrupt
 		}
 	}
 }
@@ -400,8 +400,8 @@ void print_line(int line, int in){
 		write_data(0x0, 0x82);
 		notWait(4);
 		print_v[0]= (in/1000)+0x30;			//Prints Character 3 from 4 character input
-		print_v[1]= (in%1000/100)+0x30;		//Prints Character 2 from 4 character input
-		print_v[2]= (in%100/10)+0x30;		//Prints Character 1 from 4 character input
+		print_v[1]= (in%1000/100)+0x30;			//Prints Character 2 from 4 character input
+		print_v[2]= (in%100/10)+0x30;			//Prints Character 1 from 4 character input
 		print_v[3]= (in%10/1)+0x30;			//Prints Character 0 from 4 character input
 	}
 	else if(line == 1){
@@ -409,8 +409,8 @@ void print_line(int line, int in){
 		write_data(0x0, 0xC2);
 		notWait(4);
 		print_v[0]= (in/1000)+0x30;			//Prints Character 3 from 4 character input
-		print_v[1]= (in%1000/100)+0x30;		//Prints Character 2 from 4 character input
-		print_v[2]= (in%100/10)+0x30;		//Prints Character 1 from 4 character input
+		print_v[1]= (in%1000/100)+0x30;			//Prints Character 2 from 4 character input
+		print_v[2]= (in%100/10)+0x30;			//Prints Character 1 from 4 character input
 		print_v[3]= (in%10/1)+0x30;			//Prints Character 0 from 4 character input
 	}
 	for(int i=0;i<4;i++){					//Iterates through array pushing values to LCD
